@@ -3,12 +3,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-
 // Routes
 const changePasswordRouter = require("./routes/changePassword");
-const createAccountRouter = require("./routes/createAccount")
+const createAccountRouter = require("./routes/createAccount");
 const loginRouter = require("./routes/login");
-//const logoutRouter = require("./routes/logout")
+const logoutRouter = require("./routes/logout");
 
 const app = express();
 app.use(express.json());
@@ -21,11 +20,9 @@ db.on("error", (error) => console.log(error));
 db.once("open", () => console.log("Connected to Authentication Database"));
 
 // Using Routes
-app.use('/changePassword', changePasswordRouter)
-app.use('/createAccount', createAccountRouter)
-app.use('/login', loginRouter)
-//app.use('/logout', logoutRouter)
+app.use("/changePassword", changePasswordRouter);
+app.use("/createAccount", createAccountRouter);
+app.use("/login", loginRouter);
+app.use("/logout", logoutRouter);
 
-
-
-app.listen(8003, () => console.log("server started"))
+app.listen(8003, () => console.log("server started"));
