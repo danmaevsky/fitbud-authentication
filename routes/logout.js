@@ -1,0 +1,30 @@
+const express = require("express");
+const router = express.Router();
+const Refresh_Token = require("../models/refreshTokenSchema");
+const jwt = require("jsonwebtoken");
+
+/* Logging Out
+Logging out is the process of finding and deleting the refresh token to prevent
+minting new access tokens. When the user wants to access the application again,
+they will need to login again. In doing so, they will get a new access token and
+a new refresh token that will be valid for either 30 days or until they log out
+(whichever short)
+*/
+router.post("/", async (req, res) => {
+    // getting the token from the Authorization: Bearer <token> header and verifying it
+    const token = req.get("Authorization").split(" ")[1];
+    if (!jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)) {
+        return res.status(401).send({ message: "Logout Failed: Bad authentication" });
+    }
+
+    // getting userId from the JWT and using it to delete the refresh_token upon logout
+    const { userId } = jwt.decode(token);
+    const user = await Refresh_Token.findByIdAndDelete(userId);
+
+    //if the userId isn't in the refresh_token collection we return an error
+    if (!user) return res.status(404).json({ message: "User does not exist" });
+
+    res.status(200).send({ message: "Logged out successfully!" });
+});
+
+module.exports = router;
