@@ -23,13 +23,14 @@ router.post("/", async (req, res) => {
 
         //if both match than you can do anything
         if (data) {
-            const accessToken = jwt.sign({ userId: user._id.toString() }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10m" });
+            const accessToken = jwt.sign({ userId: user._id.toString() }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
 
             // Refresh token
             let refreshToken = await Refresh_Token.findById(user._id);
             if (!refreshToken) {
                 refreshToken = jwt.sign({ userId: user._id.toString() }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "30d" });
                 await new Refresh_Token({ _id: user._id, token: refreshToken }).save();
+                console.log("Created new Refresh_Token for userId:", user._id);
             } else {
                 refreshToken = refreshToken.token;
             }
