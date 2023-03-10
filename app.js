@@ -8,6 +8,8 @@ const changePasswordRouter = require("./routes/changePassword");
 const createAccountRouter = require("./routes/createAccount");
 const loginRouter = require("./routes/login");
 const logoutRouter = require("./routes/logout");
+const newTokenRouter = require("./routes/newToken");
+const authRouter = require("./routes/auth");
 
 const app = express();
 app.use(express.json());
@@ -24,5 +26,7 @@ app.use("/changePassword", changePasswordRouter);
 app.use("/createAccount", createAccountRouter);
 app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
+app.use("/newToken", newTokenRouter);
+app.use("/auth", authRouter);
 
-app.listen(8003, () => console.log("server started"));
+app.listen(8003, () => console.log("Auth Server started and listening..."));

@@ -12,17 +12,35 @@ a new refresh token that will be valid for either 30 days or until they log out
 */
 router.post("/", async (req, res) => {
     // getting the token from the Authorization: Bearer <token> header and verifying it
-    const token = req.get("Authorization").split(" ")[1];
-    if (!jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)) {
-        return res.status(401).send({ message: "Logout Failed: Bad authentication" });
+    let token;
+    try {
+        token = req.get("Authorization").split(" ")[1];
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    } catch (err) {
+        if (err instanceof jwt.TokenExpiredError) {
+            return res.status(401).send({ message: "Authentication failed. Access token expired." });
+        }
+        // did not provide token
+        return res.status(401).send({ message: "Authentication failed. Bad credentials." });
+    }
+    // console.log("/logout > token:", token);
+
+    try {
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    } catch (err) {
+        if (err instanceof jwt.TokenExpiredError) {
+            return res.status(401).send({ message: "Authentication failed. Access token expired." });
+        }
+        return res.status(401).send({ message: "Authentication failed. Bad credentials." });
     }
 
     // getting userId from the JWT and using it to delete the refresh_token upon logout
     const { userId } = jwt.decode(token);
+    console.log("/logout > userId:", userId);
     const user = await Refresh_Token.findByIdAndDelete(userId);
 
     //if the userId isn't in the refresh_token collection we return an error
-    if (!user) return res.status(404).json({ message: "User does not exist" });
+    if (!user) return res.status(404).json({ message: "User does not exist!" });
 
     res.status(200).send({ message: "Logged out successfully!" });
 });
