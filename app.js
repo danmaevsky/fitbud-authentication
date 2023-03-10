@@ -10,6 +10,7 @@ const loginRouter = require("./routes/login");
 const logoutRouter = require("./routes/logout");
 const newTokenRouter = require("./routes/newToken");
 const authRouter = require("./routes/auth");
+const deleteAccountRouter = require("./routes/deleteAccount");
 
 const app = express();
 app.use(express.json());
@@ -28,5 +29,6 @@ app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
 app.use("/newToken", newTokenRouter);
 app.use("/auth", authRouter);
+app.use("/deleteAccount", deleteAccountRouter);
 
 app.listen(8003, () => console.log("Auth Server started and listening..."));
