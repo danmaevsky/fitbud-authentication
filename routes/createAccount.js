@@ -11,13 +11,11 @@ router.post("/", async (req, res) => {
     const email = req.body.email;
 
     //password check
-    if (!passcheck.test(req.body.saltedHashedPass)) {
-        return res
-            .status(400)
-            .json({
-                message:
-                    "Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number and one special character!",
-            });
+    if (!passcheck.test(req.body.password)) {
+        return res.status(400).json({
+            message:
+                "Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number and one special character!",
+        });
     }
 
     //valid email check
@@ -31,7 +29,7 @@ router.post("/", async (req, res) => {
     }
 
     //using bcrypt to generate a password
-    const userHash = await bcrypt.hash(req.body.saltedHashedPass, 12).catch((err) => console.error(err.message));
+    const userHash = await bcrypt.hash(req.body.password, 12).catch((err) => console.error(err.message));
 
     //creating a new user under input arguments
     const user = new User({
