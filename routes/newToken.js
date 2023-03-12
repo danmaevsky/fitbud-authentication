@@ -18,6 +18,9 @@ router.post("/", async (req, res) => {
         jwt.verify(clientRefreshToken, process.env.REFRESH_TOKEN_SECRET);
         const { userId } = jwt.decode(clientRefreshToken);
         // console.log("/newToken > userId:", userId);
+        if (!(await Refresh_Token.findById(userId))) {
+            throw new Error("Grant failed. Bad credentials.");
+        }
 
         const accessToken = jwt.sign({ userId: userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
         return res.send({ accessToken: accessToken });
@@ -38,6 +41,7 @@ router.post("/", async (req, res) => {
             // console.log("JsonWebTokenError");
             return res.status(401).send({ message: "Grant failed. Bad credentials." });
         }
+        return res.status(401).send({ message: "Grant failed. Bad credentials." });
     }
 });
 

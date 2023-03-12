@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 router.post("/", (req, res) => {
     // getting the token from the Authorization: Bearer <token> header and verifying it
+    console.log("/auth was called");
     let token;
     try {
         token = req.get("Authorization").split(" ")[1];
