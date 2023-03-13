@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 
 // Routes
 const changePasswordRouter = require("./routes/changePassword");
@@ -31,4 +30,4 @@ app.use("/newToken", newTokenRouter);
 app.use("/auth", authRouter);
 app.use("/deleteAccount", deleteAccountRouter);
 
-app.listen(8003, () => console.log("Auth Server started and listening..."));
+app.listen(process.env.LISTEN_PORT, () => console.log("Auth Server started and listening..."));
