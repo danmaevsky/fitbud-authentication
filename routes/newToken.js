@@ -12,16 +12,11 @@ If it is not valid, send the user a 401 Unauthorized AND delete the existing ref
 */
 router.post("/", async (req, res) => {
     const clientRefreshToken = req.body.refreshToken;
-    console.log("Client Refresh Token:", clientRefreshToken);
     try {
-        console.log("Before verifying refresh token");
         // verify that the token is both a real token AND that the user has not logged out
         jwt.verify(clientRefreshToken, process.env.REFRESH_TOKEN_SECRET);
-        console.log("After verifying refresh token");
         const { userId } = jwt.decode(clientRefreshToken);
-        console.log("After decoding refresh token");
         if (!(await Refresh_Token.findById(userId))) {
-            console.log("Could not find userId in the refreshToken collection");
             throw new Error("Refresh token invalidated.");
         }
 
@@ -29,27 +24,23 @@ router.post("/", async (req, res) => {
         const accessToken = jwt.sign({ userId: userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
         return res.send({ accessToken: accessToken });
     } catch (err) {
-        console.log(err);
         // refresh token is invalid for some reason
         if (err instanceof jwt.TokenExpiredError) {
             // refresh token simply expired, so also delete it from the database
             const { userId } = jwt.decode(clientRefreshToken);
             let tokenObject = await Refresh_Token.findById(userId);
             if (tokenObject && clientRefreshToken === tokenObject.token) {
-                console.log("Expired.");
                 await Refresh_Token.findByIdAndDelete(userId);
                 return res.status(401).send({ message: "Grant expired. Please login again!" });
             } else {
-                console.log("Bad.");
                 return res.status(401).send({ message: "Grant failed. Bad credentials." });
             }
         }
         if (err instanceof jwt.JsonWebTokenError) {
-            console.log("JsonWebTokenError");
+            // console.log("JsonWebTokenError");
             return res.status(401).send({ message: "Grant failed. Bad credentials." });
         }
         // any other kind of error
-        console.log("REALLY bad.");
         return res.status(401).send({ message: "Grant failed. Bad credentials." });
     }
 });
