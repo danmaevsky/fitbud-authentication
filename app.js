@@ -30,4 +30,4 @@ app.use("/newToken", newTokenRouter);
 app.use("/auth", authRouter);
 app.use("/deleteAccount", deleteAccountRouter);
 
-app.listen(process.env.LISTEN_PORT, () => console.log("Auth Server started and listening..."));
+app.listen(process.env.LISTEN_PORT, () => console.log(`Auth Server started and listening on Port ${process.env.LISTEN_PORT}...`));
