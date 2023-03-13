@@ -2,8 +2,6 @@
 // If not, then delete it from the database and logout the user on the client side.
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcrypt");
-const User = require("../models/userSchema");
 const Refresh_Token = require("../models/refreshTokenSchema");
 const jwt = require("jsonwebtoken");
 
@@ -15,13 +13,14 @@ If it is not valid, send the user a 401 Unauthorized AND delete the existing ref
 router.post("/", async (req, res) => {
     const clientRefreshToken = req.body.refreshToken;
     try {
+        // verify that the token is both a real token AND that the user has not logged out
         jwt.verify(clientRefreshToken, process.env.REFRESH_TOKEN_SECRET);
         const { userId } = jwt.decode(clientRefreshToken);
-        // console.log("/newToken > userId:", userId);
         if (!(await Refresh_Token.findById(userId))) {
-            throw new Error("Grant failed. Bad credentials.");
+            throw new Error("Refresh token invalidated.");
         }
 
+        // passed checks, mint new access token and deliver to client
         const accessToken = jwt.sign({ userId: userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
         return res.send({ accessToken: accessToken });
     } catch (err) {
@@ -41,6 +40,7 @@ router.post("/", async (req, res) => {
             // console.log("JsonWebTokenError");
             return res.status(401).send({ message: "Grant failed. Bad credentials." });
         }
+        // any other kind of error
         return res.status(401).send({ message: "Grant failed. Bad credentials." });
     }
 });
