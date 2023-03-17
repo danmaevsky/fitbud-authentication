@@ -36,11 +36,12 @@ router.post("/", async (req, res) => {
             } else {
                 refreshToken = refreshToken.token;
             }
-
+            console.log("Login successful");
             res.status(200).send({ accessToken: accessToken, refreshToken: refreshToken, message: "Login Successful!" });
         }
         //if it fails the password is incorrect
         else {
+            console.log(`${email} failed to login`);
             res.status(401).send({ message: "Invalid credentials!" });
         }
     });

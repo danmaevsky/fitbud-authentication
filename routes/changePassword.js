@@ -66,6 +66,7 @@ router.put("/", async (req, res) => {
                 }
                 userAccount.saltedHashedPass = hash;
                 userAccount.save();
+                console.log("Password changed successfully");
                 return res.status(201).send({ message: "No Content" });
             });
         }

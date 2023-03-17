@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
     //try catch relating to creating a new user object
     try {
         const newuser = await user.save();
-        console.log(user["_id"]);
+        console.log("Account with " + user["_id"] + " created successfully");
         res.status(201).send({ userId: user["_id"], message: "Account Created!" });
     } catch (err) {
         console.log(err);
