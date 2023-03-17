@@ -43,6 +43,7 @@ router.post("/", async (req, res) => {
         console.log(user["_id"]);
         res.status(201).json({ userId: user["_id"], message: "Account Created!" });
     } catch (err) {
+        console.log(err);
         res.status(400).json({ message: err.message });
     }
 });
