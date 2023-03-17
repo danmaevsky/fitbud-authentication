@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
     const plaintextpassword = req.body.password;
 
     //finding the user using the passed email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email });
 
     //if the email isn't in our database we return an error
     if (!user) return res.status(400).json({ message: "User not exist" });
