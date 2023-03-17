@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
     const user = await Refresh_Token.findByIdAndDelete(userId);
 
     //if the userId isn't in the refresh_token collection we return an error
-    if (!user) return res.status(404).json({ message: "User does not exist!" });
+    if (!user) return res.status(404).send({ message: "User does not exist!" });
 
     res.status(200).send({ message: "Logged out successfully!" });
 });

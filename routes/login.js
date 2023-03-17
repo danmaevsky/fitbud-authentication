@@ -16,12 +16,12 @@ router.post("/", async (req, res) => {
     const user = await User.findOne({ email: email });
 
     //if the email isn't in our database we return an error
-    if (!user) return res.status(400).json({ message: "User not exist" });
+    if (!user) return res.status(400).send({ message: "User not exist" });
 
     //password check
     bcrypt.compare(plaintextpassword, user.saltedHashedPass, async (err, data) => {
         //if error than throw error
-        if (err) res.status(500).json({ message: err.message });
+        if (err) res.status(500).send({ message: err.message });
 
         //if both match than you can do anything
         if (data) {
@@ -37,11 +37,11 @@ router.post("/", async (req, res) => {
                 refreshToken = refreshToken.token;
             }
 
-            res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken, message: "Login Successful!" });
+            res.status(200).send({ accessToken: accessToken, refreshToken: refreshToken, message: "Login Successful!" });
         }
         //if it fails the password is incorrect
         else {
-            res.status(401).json({ message: "Invalid credentials!" });
+            res.status(401).send({ message: "Invalid credentials!" });
         }
     });
 });
