@@ -9,8 +9,7 @@ router.post("/", async (req, res) => {
     //getting the email to identify the user and password login request
     const email = req.body.email;
     const plaintextpassword = req.body.password;
-    console.log("email:", email);
-    console.log("plaintextpassword:", plaintextpassword);
+    console.log("Email attempting to login:", email);
 
     //finding the user using the passed email
     const user = await User.findOne({ email: email });

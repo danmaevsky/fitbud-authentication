@@ -26,15 +26,6 @@ router.post("/", async (req, res) => {
     }
     // console.log("/logout > token:", token);
 
-    try {
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    } catch (err) {
-        if (err instanceof jwt.TokenExpiredError) {
-            return res.status(401).send({ message: "Authentication failed. Access token expired." });
-        }
-        return res.status(401).send({ message: "Authentication failed. Bad credentials." });
-    }
-
     // getting userId from the JWT and using it to delete the refresh_token upon logout
     const { userId } = jwt.decode(token);
     const user = await Refresh_Token.findByIdAndDelete(userId);
