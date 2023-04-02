@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
         }
 
         // passed checks, mint new access token and deliver to client
-        const accessToken = jwt.sign({ userId: userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "60m" });
+        const accessToken = jwt.sign({ userId: userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
         return res.send({ accessToken: accessToken });
     } catch (err) {
         // refresh token is invalid for some reason
