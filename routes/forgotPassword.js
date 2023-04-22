@@ -134,7 +134,7 @@ router.put("/:userId/:token", async (req, res) => {
         user.saltedHashedPass = hash;
         user.save();
         console.log("Password changed successfully");
-        return res.status(201).send({ message: "No Content" });
+        return res.status(201).send({ message: "Password changed successfully" });
       });
     }
   } catch (err) {
