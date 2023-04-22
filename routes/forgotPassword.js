@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const nodemailer = require("nodemailer");
 const router = express.Router();
 const User = require("../models/userSchema");
 
@@ -23,8 +24,32 @@ router.post("/", async (req, res) => {
         { expiresIn: "15m" }
       );
       console.log(user);
-      const resetLink = `http://localhost:${process.env.LISTEN_PORT}/forgotPassword/${user._id}/${token}`;
-      res.status(200).send(resetLink);
+      const resetLink = `${process.env.RESET_LINK}/forgotPassword/${user._id}/${token}`;
+
+      const transporter = nodemailer.createTransport({
+        service: "hotmail",
+        auth: {
+          user: "fitbudresetpassword@outlook.com",
+          pass: "ThisIs@VeryStrongPassword123!",
+        },
+      });
+
+      const emailDetails = {
+        from: "fitbudresetpassword@outlook.com",
+        to: user.email,
+        subject: "Password Reset Link",
+        text: resetLink,
+      };
+
+      transporter.sendMail(emailDetails, function (err, info) {
+        if (err) {
+          res.status(500).send({ message: err.message });
+        } else {
+          console.log(info.response);
+        }
+      });
+
+      res.status(201).send({ message: "Reset email has been sent" });
     }
   } catch (err) {
     res.status(500).send({ message: err.message });
