@@ -9,7 +9,7 @@ const User = require("../models/userSchema");
 const FORGOT_PASSWORD_SECRET = process.env.FORGOT_PASSWORD_SECRET;
 
 router.post("/", async (req, res) => {
-  email = req.body.email;
+  let email = req.body.email;
   console.log("hit post");
 
   try {
