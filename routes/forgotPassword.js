@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
         { expiresIn: "15m" }
       );
       console.log(user);
-      const resetLink = `${process.env.RESET_LINK}/forgotPassword/${user._id}/${token}`;
+      const resetLink = `${process.env.CLIENT_LINK}/forgotPassword/${user._id}/${token}`;
 
       const transporter = nodemailer.createTransport({
         service: "hotmail",
