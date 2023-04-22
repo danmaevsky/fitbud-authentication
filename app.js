@@ -12,6 +12,7 @@ const newTokenRouter = require("./routes/newToken");
 const authRouter = require("./routes/auth");
 const deleteAccountRouter = require("./routes/deleteAccount");
 const rollbackRouter = require("./routes/rollback");
+const forgotPasswordRouter = require("./routes/forgotPassword");
 
 // Instantiating app and restricting communication to only Gateway
 const app = express();
@@ -46,5 +47,6 @@ app.use("/newToken", newTokenRouter);
 app.use("/auth", authRouter);
 app.use("/deleteAccount", deleteAccountRouter);
 app.use("/rollback", rollbackRouter);
+app.use("/forgotPassword", forgotPasswordRouter);
 
 app.listen(process.env.LISTEN_PORT, () => console.log(`Auth Server started and listening on Port ${process.env.LISTEN_PORT}...`));
