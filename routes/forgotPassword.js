@@ -33,12 +33,17 @@ router.post("/", async (req, res) => {
           pass: "ThisIs@VeryStrongPassword123!",
         },
       });
+      
+      const html = `<h1 style="text-align: center;">Password Reset</h1>
+<hr />
+<p style="text-align: center;">If you didn't request a password reset, ignore this email.</p>
+<p style="text-align: center;"><a href="${resetLink}" target="_blank" rel="noopener">Reset Password</a></p>`
 
       const emailDetails = {
         from: "fitbudresetpassword@outlook.com",
         to: user.email,
         subject: "Password Reset Link",
-        text: resetLink,
+        html: ,
       };
 
       transporter.sendMail(emailDetails, function (err, info) {
