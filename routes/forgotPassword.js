@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
         from: "fitbudresetpassword@outlook.com",
         to: user.email,
         subject: "Password Reset Link",
-        html: ,
+        html: html,
       };
 
       transporter.sendMail(emailDetails, function (err, info) {
