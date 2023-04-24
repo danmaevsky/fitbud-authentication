@@ -44,16 +44,16 @@ router.post("/", async (req, res) => {
 
       transporter.sendMail(emailDetails, function (err, info) {
         if (err) {
-          res.status(500).send({ message: err.message });
+          return res.status(500).send({ message: err.message });
         } else {
           console.log(info.response);
         }
       });
 
-      res.status(201).send({ message: "Reset email has been sent" });
+      return res.status(201).send({ message: "Reset email has been sent" });
     }
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    return res.status(500).send({ message: err.message });
   }
 });
 
@@ -69,22 +69,22 @@ router.get("/:userId/:token", async (req, res) => {
       const resetSecret = FORGOT_PASSWORD_SECRET + user.saltedHashedPass;
       try {
         const verifyLink = jwt.verify(token, resetSecret);
-        res
+        return res
           .status(200)
           .send({ message: "Token Verified. User may reset password" });
       } catch (err) {
         if (err instanceof jwt.TokenExpiredError) {
-          res
+          return res
             .status(401)
             .send({ message: "Authentication failed. Access token expired." });
         }
-        res
+        return res
           .status(401)
           .send({ message: "Authentication failed. Bad credentials." });
       }
     }
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    return res.status(500).send({ message: err.message });
   }
 });
 
@@ -99,11 +99,11 @@ router.put("/:userId/:token", async (req, res) => {
         const verifyLink = jwt.verify(req.params.token, resetSecret);
       } catch (err) {
         if (err instanceof jwt.TokenExpiredError) {
-          res
+          return res
             .status(401)
             .send({ message: "Authentication failed. Access token expired." });
         }
-        res
+        return res
           .status(401)
           .send({ message: "Authentication failed. Bad credentials." });
       }
@@ -115,10 +115,12 @@ router.put("/:userId/:token", async (req, res) => {
       );
 
       if (!newPassword || !confirmNewPassword) {
-        res.status(400).send({ message: "Missing fields!" });
+        return res.status(400).send({ message: "Missing fields!" });
       }
       if (newPassword != confirmNewPassword) {
-        res.status(400).send({ message: "Password fields do not match!" });
+        return res
+          .status(400)
+          .send({ message: "Password fields do not match!" });
       }
 
       if (!passcheck.test(newPassword)) {
@@ -139,7 +141,7 @@ router.put("/:userId/:token", async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    return res.status(500).send({ message: err.message });
   }
 });
 
