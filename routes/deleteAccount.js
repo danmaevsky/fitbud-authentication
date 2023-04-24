@@ -21,7 +21,7 @@ router.delete("/", async (req, res) => {
     try {
         let userId = jwt.decode(token).userId;
         // delete the user from accounts AND delete the refresh_token too
-        await User.findByIdAndDelete(userId);
+        const user = await User.findByIdAndDelete(userId);
         await Refresh_Token.findByIdAndDelete(userId);
         return res.send({ message: "Account deleted successfully!" });
     } catch (err) {
