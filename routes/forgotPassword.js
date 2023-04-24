@@ -592,7 +592,7 @@ function generateResetPasswordMessage(resetLink) {
           <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
             <tr>
               <td class="email-masthead">
-                <a href="" class="f-fallback email-masthead_name">
+                <a href="https://danmaevsky.github.io/fitbud-frontend-pages/#/" class="f-fallback email-masthead_name">
                 fitBud.
               </a>
               </td>
