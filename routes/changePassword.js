@@ -29,17 +29,17 @@ router.put("/", async (req, res) => {
 
     //if any of the fields are empty
     if (!currPassword || !newPassword || !confirmNewPassword) {
-        return res.status(400).json({ message: "Missing fields!" });
+        return res.status(400).send({ message: "Missing fields!" });
     }
 
     //if the password does not match the confirm password
     if (newPassword != confirmNewPassword) {
-        return res.status(400).json({ message: "Password fields do not match!" });
+        return res.status(400).send({ message: "Password fields do not match!" });
     }
 
     if (!passcheck.test(newPassword)) {
         console.log(passcheck.test(newPassword));
-        return res.status(400).json({
+        return res.status(400).send({
             message:
                 "Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number and one special character!",
         });
@@ -52,21 +52,22 @@ router.put("/", async (req, res) => {
 
     bcrypt.compare(currPassword, userAccount.saltedHashedPass, (err, isMatch) => {
         if (err) {
-            return res.status(500).json({ message: "Internal Server Error! We are definitely, 100%, totally working on fixing this right now!" });
+            return res.status(500).send({ message: "Internal Server Error! We are definitely, 100%, totally working on fixing this right now!" });
         }
 
         if (!isMatch) {
-            return res.status(400).json({ message: "Current password is incorrect." });
+            return res.status(400).send({ message: "Current password is incorrect." });
         }
 
         if (isMatch) {
             bcrypt.hash(newPassword, 12, (err, hash) => {
                 if (err) {
-                    return res.status(500).json({ message: err.message });
+                    return res.status(500).send({ message: err.message });
                 }
                 userAccount.saltedHashedPass = hash;
                 userAccount.save();
-                return res.status(201).json({ message: "No Content" });
+                console.log("Password changed successfully");
+                return res.status(201).send({ message: "No Content" });
             });
         }
     });
