@@ -8,6 +8,7 @@ router.post("/", (req, res) => {
     let token;
     try {
         token = req.get("Authorization").split(" ")[1];
+        console.log(token)
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         res.status(200).send({ message: "Authentication successful!" });
     } catch (err) {
